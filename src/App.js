@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Routes, Route, Navigate, useParams } from "rea
 
 import Home from './KundenWunsch/Home';
 import Formular from './KundenWunsch/Formular';
+import Kundenwunsch from './Admin/KundenWuensche';
+import KundenEinzelansicht from './Admin/KundenEinzelansicht';
 
 
 function App() {
@@ -27,7 +29,23 @@ function App() {
             }
           />
           
-         
+          <Route
+            path="/kundenwuensche"
+            element={
+              <>
+                <Kundenwunsch />
+              </>
+            }
+          />
+
+          <Route
+            path="/kundenwuensche/:id"
+            element={
+              <>
+                <KundenEinzelansicht />
+              </>
+            }
+          />
         </Routes>
       </Router>
     </div>

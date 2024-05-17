@@ -1,36 +1,39 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { Link } from 'react-router-dom';
+import './Kundenwunsch.scss'; // Importieren Sie die SCSS-Datei
 
-function KundenwunschAnzeige({ kundenwunsch }) {
-  const {
-    artikel,
-    marke,
-    maxPreis,
-    vorname,
-    nachname,
-    adresse,
-    plz,
-    ort,
-    anrede,
-    mobil,
-    bildLink
-  } = kundenwunsch;
+const Kundenwunsch = () => {
+  const [kundenwunsch, setKundenwunsch] = useState(null);
+
+  useEffect(() => {
+    const fetchKundenwunsch = async () => {
+      try {
+        const response = await axios.get('https://backendkunden.onrender.com/api/v1/kunden');
+        setKundenwunsch(response.data.data);
+      } catch (error) {
+        console.error('Fehler beim Abrufen der Daten vom Backend:', error);
+      }
+    };
+
+    fetchKundenwunsch();
+  }, []);
+
+  if (!kundenwunsch) {
+    return <div className="kundenwunsch">Lade Kundenwunsch...</div>;
+  }
 
   return (
-    <div className="kundenwunsch-anzeige">
-      <h2>Kundenwunsch</h2>
-      <p><strong>Artikelwunsch:</strong> {artikel}</p>
-      <p><strong>Marke:</strong> {marke}</p>
-      <p><strong>Max. Preis:</strong> {maxPreis}</p>
-      <p><strong>Vorname:</strong> {vorname}</p>
-      <p><strong>Nachname:</strong> {nachname}</p>
-      <p><strong>Adresse:</strong> {adresse}</p>
-      <p><strong>PLZ:</strong> {plz}</p>
-      <p><strong>Ort:</strong> {ort}</p>
-      <p><strong>Anrede:</strong> {anrede}</p>
-      <p><strong>Mobil:</strong> {mobil}</p>
-      {bildLink && <img src={bildLink} alt="Bild" />} {/* Wenn ein Bild vorhanden ist, zeige es an */}
+    <div className="kundenwunsch">
+      {kundenwunsch.map((kunde, index) => (
+        <Link to={`/kundenwuensche/${kunde.id}`} key={index} className="kundenwunsch-box">
+          <h2>Kundenwunsch {index + 1}</h2>
+          <p className="artikelname">{kunde.artikelname}</p>
+          <p className="name">{kunde.vorname} {kunde.nachname}</p>
+        </Link>
+      ))}
     </div>
   );
-}
+};
 
-export default KundenwunschAnzeige;
+export default Kundenwunsch;
